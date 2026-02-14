@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
 @RestController
@@ -41,10 +42,11 @@ public class QuestionController {
 
     // MARK SOLVED
     @PostMapping("/{id}/solve")
-    public String solve(@PathVariable Long id) {
+    public ResponseEntity<Void> solve(@PathVariable Long id) {
         questionService.markSolved(id, SecurityUtil.getCurrentUserEmail());
-        return "Marked solved";
+        return ResponseEntity.ok().build();
     }
+
 
     // UPDATE DIFFICULTY
     @PutMapping("/{id}/difficulty")
