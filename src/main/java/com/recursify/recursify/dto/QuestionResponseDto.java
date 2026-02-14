@@ -8,7 +8,6 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class QuestionResponseDto {
-
     private Long id;
     private String title;
     private String description;
@@ -16,4 +15,5 @@ public class QuestionResponseDto {
     private Difficulty difficulty;
     private LocalDate nextRevisionDate;
     private Integer solveCount;
+    private String link;
 }

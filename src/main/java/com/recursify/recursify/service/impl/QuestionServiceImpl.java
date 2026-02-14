@@ -46,6 +46,7 @@ public class QuestionServiceImpl implements QuestionService {
                 .description(dto.getDescription())
                 .questionNumber(dto.getQuestionNumber())
                 .difficulty(dto.getDifficulty())
+                .link(dto.getLink())
                 .solveCount(1)                     
                 .lastSolvedDate(today)             
                 .nextRevisionDate(
@@ -224,6 +225,7 @@ public class QuestionServiceImpl implements QuestionService {
                 .difficulty(q.getDifficulty())
                 .nextRevisionDate(q.getNextRevisionDate())
                 .solveCount(q.getSolveCount())
+                .link(q.getLink())
                 .build();
     }
 }
