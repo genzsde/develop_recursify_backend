@@ -9,4 +9,5 @@ public class QuestionRequestDto {
     private String description;
     private Integer questionNumber;
     private Difficulty difficulty;
+    private String link;
 }

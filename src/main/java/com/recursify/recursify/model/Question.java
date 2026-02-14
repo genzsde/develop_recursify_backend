@@ -23,6 +23,8 @@ public class Question {
     @Enumerated(EnumType.STRING)
     private Difficulty difficulty;
 
+    private String link;
+
     private LocalDate lastSolvedDate;
     private LocalDate nextRevisionDate;
     private Integer solveCount;
