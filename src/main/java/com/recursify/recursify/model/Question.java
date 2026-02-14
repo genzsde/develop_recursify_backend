@@ -5,6 +5,9 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(
+    uniqueConstraints = @UniqueConstraint(columnNames = {"questionNumber", "user_id"})
+)
 @Getter
 @Setter
 @Builder

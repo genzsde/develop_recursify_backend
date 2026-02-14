@@ -30,6 +30,8 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
 
     List<Question> findByUserIdAndNextRevisionDateLessThanEqual(Long userId, LocalDate date);
+    boolean existsByQuestionNumberAndUserId(Integer questionNumber, Long userId);
+
 
     List<Question> findTop5ByUserIdAndDifficultyAndNextRevisionDateLessThanEqual(
         Long userId, Difficulty difficulty, LocalDate date);
