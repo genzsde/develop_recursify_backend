@@ -38,6 +38,10 @@ public class QuestionServiceImpl implements QuestionService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        if (questionRepository.existsByQuestionNumberAndUserId(dto.getQuestionNumber(), user.getId())) {
+        throw new RuntimeException("Question number already exists. Please use a different question number.");
+        }
 
         LocalDate today = LocalDate.now();
 
