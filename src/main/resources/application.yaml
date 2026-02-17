@@ -3,11 +3,11 @@ spring:
     name: recursify
   datasource:
     # Connection string for your database
-    url: jdbc:mysql://localhost:3306/recursifyDb?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/recursifydb?useSSL=false&serverTimezone=UTC
     # Default MySQL username is usually 'root'
     username: root
     # Replace with your actual MySQL password
-    password: Shubham2543@
+    password: Mssql@123
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:

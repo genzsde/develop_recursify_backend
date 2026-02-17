@@ -74,6 +74,8 @@ public class QuestionController {
         return questionService.getSmartQueue(auth.getName());
     }
 
+    
+
     @GetMapping("/paged")
     public Page<QuestionResponseDto> getPaged(
             Authentication auth,
@@ -82,7 +84,4 @@ public class QuestionController {
 
         return (Page<QuestionResponseDto>) questionService.getPaginated(auth.getName(), page, size);
     }
-
-
-
 }
