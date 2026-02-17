@@ -6,6 +6,7 @@ import com.recursify.recursify.util.SecurityUtil;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -56,6 +57,15 @@ public class QuestionController {
         return questionService.updateDifficulty(
                 id, level, SecurityUtil.getCurrentUserEmail());
     }
+
+    // // UPDATE QUESTION
+     @PutMapping("/update/{id}")
+    public QuestionResponseDto updateQuestion(
+            @PathVariable Long id,
+            @RequestBody QuestionRequestDto dto) {
+        return questionService.updateQuestion(id, dto, SecurityUtil.getCurrentUserEmail());
+    }
+
 
     // DELETE
     @DeleteMapping("/{id}")
