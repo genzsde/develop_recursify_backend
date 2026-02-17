@@ -22,6 +22,8 @@ public interface QuestionService {
 
     QuestionResponseDto updateDifficulty(Long id, String difficulty, String userEmail);
 
+    QuestionResponseDto updateQuestion(Long id, QuestionRequestDto dto, String email);
+
     void markSolved(Long id, String userEmail);
     List<HeatmapDto> getHeatmap(String email);
 

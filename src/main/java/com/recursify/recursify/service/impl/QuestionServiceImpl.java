@@ -39,9 +39,11 @@ public class QuestionServiceImpl implements QuestionService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
-        if (questionRepository.existsByQuestionNumberAndUserId(dto.getQuestionNumber(), user.getId())) {
-        throw new RuntimeException("Question number already exists. Please use a different question number.");
+        if (questionRepository.existsBySlugAndUserId(
+        dto.getSlug(), user.getId())) {
+                throw new RuntimeException("Question already added.");
         }
+
 
         LocalDate today = LocalDate.now();
 
@@ -51,6 +53,7 @@ public class QuestionServiceImpl implements QuestionService {
                 .questionNumber(dto.getQuestionNumber())
                 .difficulty(dto.getDifficulty())
                 .link(dto.getLink())
+                .slug(dto.getSlug())
                 .solveCount(1)                     
                 .lastSolvedDate(today)             
                 .nextRevisionDate(
@@ -157,6 +160,41 @@ public class QuestionServiceImpl implements QuestionService {
 
         return mapToDto(saved);
     }
+
+    @Override
+        public QuestionResponseDto updateQuestion(Long id, QuestionRequestDto dto, String email) {
+
+        Question question = questionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Question not found"));
+
+        if (!question.getUser().getEmail().equals(email))
+                throw new RuntimeException("Unauthorized");
+
+        // ---- UPDATE TITLE ----
+        if (dto.getTitle() != null)
+                question.setTitle(dto.getTitle());
+
+        // ---- UPDATE DESCRIPTION ----
+        if (dto.getDescription() != null)
+                question.setDescription(dto.getDescription());
+
+        // ---- UPDATE LINK ----
+        if (dto.getLink() != null)
+                question.setLink(dto.getLink());
+
+        // ---- UPDATE DIFFICULTY (IMPORTANT) ----
+        if (dto.getDifficulty() != null && dto.getDifficulty() != question.getDifficulty()) {
+                question.setDifficulty(dto.getDifficulty());
+                question.setNextRevisionDate(
+                        RevisionUtil.calculateNextRevision(dto.getDifficulty())
+                );
+        }
+
+        Question saved = questionRepository.save(question);
+
+        return mapToDto(saved);
+        }
+
 
     @Override
     public void deleteQuestion(Long id, String email) {
