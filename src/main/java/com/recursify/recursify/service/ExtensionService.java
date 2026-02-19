@@ -14,5 +14,5 @@ public interface ExtensionService {
 
     QuestionResponseDto addQuestion(QuestionRequestDto dto, String email);
 
-    void processSlug(String slug);
+    void processSlug(String slug, Long solvedAt, String timezone);
 }
