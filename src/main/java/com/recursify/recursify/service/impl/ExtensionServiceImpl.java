@@ -10,8 +10,15 @@ import com.recursify.recursify.service.ExtensionService;
 import com.recursify.recursify.service.LeetCodeGraphQLService;
 import com.recursify.recursify.service.QuestionService;
 import com.recursify.recursify.util.SecurityUtil;
+import com.recursify.recursify.model.Question;
 
 import lombok.RequiredArgsConstructor;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,43 +50,53 @@ public class ExtensionServiceImpl implements ExtensionService {
         }
     }
 
-    /**
-     * Delegates to QuestionService (Single Source of Truth)
-     */
+
     @Override
     public QuestionResponseDto addQuestion(QuestionRequestDto dto, String email) {
         return questionService.addQuestion(dto, email);
     }
 
-    /**
-     * Main Extension Flow (Idempotent + Optimized)
-     */
+ 
     @Override
-    public void processSlug(String slug) {
+    public void processSlug(String slug, Long solvedAt, String timezone) {
+
+        LocalDate solvedDate = Instant.ofEpochMilli(solvedAt)
+        .atZone(ZoneId.of(timezone))
+        .toLocalDate();
 
         String email = SecurityUtil.getCurrentUserEmail();
         Long userId = userRepository.findByEmail(email).orElseThrow().getId();
 
-        // 1️⃣ Skip if already exists
-        if (questionRepository.existsBySlugAndUserId(slug, userId)) {
+       
+        Optional<Question> existingOpt =
+                questionRepository.findBySlugAndUserId(slug, userId);
+
+        if (existingOpt.isPresent()) {
+
+            Question q = existingOpt.get();
+
+            if (q.getNextRevisionDate() != null &&
+                q.getNextRevisionDate().equals(solvedDate)) {
+
+                questionService.markSolved(q.getId(), email);
+            }
+
             return;
         }
 
-        // 2️⃣ Get from shared
         SharedQuestion shared = sharedRepo.findBySlug(slug).orElse(null);
 
-        // 3️⃣ Fetch from LeetCode if missing
         if (shared == null) {
             shared = leetCodeGraphQLService.fetchQuestion(slug);
             sharedRepo.save(shared);
         }
 
-        // 4️⃣ Safety check
+       
         if (shared.getQuestionNumber() == null || shared.getQuestionNumber() == 0) {
             throw new RuntimeException("Invalid question number from LeetCode");
         }
 
-        // 5️⃣ Convert → DTO (FIXED: slug added)
+
         QuestionRequestDto dto = QuestionRequestDto.builder()
                 .slug(slug)
                 .title(shared.getTitle())

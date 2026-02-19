@@ -9,9 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 
-
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query("""
@@ -37,5 +37,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
         Long userId, Difficulty difficulty, LocalDate date);
 
     boolean existsBySlugAndUserId(String slug, Long userId);
+
+    Optional<Question> findBySlugAndUserId(String slug, Long userId); 
 
 }
