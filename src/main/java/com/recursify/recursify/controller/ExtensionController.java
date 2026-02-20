@@ -37,7 +37,10 @@ public class ExtensionController {
     }
 
     @PostMapping("/process")
-    public void process(@RequestParam String slug) {
-        extensionService.processSlug(slug);
+    public void process(@RequestParam String slug,
+                        @RequestParam Long solvedAt,
+                        @RequestParam String timezone) {
+        extensionService.processSlug(slug, solvedAt, timezone);
     }
+
 }
