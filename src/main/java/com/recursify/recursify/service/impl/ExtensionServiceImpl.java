@@ -76,7 +76,7 @@ public class ExtensionServiceImpl implements ExtensionService {
             Question q = existingOpt.get();
 
             if (q.getNextRevisionDate() != null &&
-                q.getNextRevisionDate().equals(solvedDate)) {
+                !solvedDate.isBefore(q.getNextRevisionDate())) {
 
                 questionService.markSolved(q.getId(), email);
             }
